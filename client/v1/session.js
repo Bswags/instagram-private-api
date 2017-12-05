@@ -7,7 +7,7 @@ var CookieStorage = require("./cookie-storage");
 var RequestJar = require("./jar");
 
 function Session(device, storage, proxy) {
-    this.setDevice(device);    
+    this.setDevice(device);
     this.setCookiesStorage(storage);
     if(_.isString(proxy) && !_.isEmpty(proxy))
         this.proxyUrl = proxy;
@@ -48,8 +48,8 @@ Object.defineProperty(Session.prototype, "device", {
 
 
 Object.defineProperty(Session.prototype, "CSRFToken", {
-    get: function() { 
-        var cookies = this.jar.getCookies(CONSTANTS.HOST) 
+    get: function() {
+        var cookies = this.jar.getCookies(CONSTANTS.HOST)
         var item = _.find(cookies, { key: "csrftoken" });
         return item ? item.value : "missing";
     },
@@ -57,7 +57,7 @@ Object.defineProperty(Session.prototype, "CSRFToken", {
 });
 
 Object.defineProperty(Session.prototype, "proxyUrl", {
-    get: function() { 
+    get: function() {
         return this._proxyUrl;
     },
     set: function (val) {
@@ -124,16 +124,16 @@ Session.prototype.destroy = function () {
 };
 
 
-Session.login = function(session, username, password) {
+Session.login = function(session, username, password, extra) {
     return new Request(session)
         .setResource('login')
         .setMethod('POST')
         .generateUUID()
-        .setData({
+        .setData(Object.assign({
             username: username,
             password: password,
             login_attempt_count: 0
-        })
+        }, extra)
         .signPayload()
         .send()
         .catch(function (error) {
@@ -177,17 +177,17 @@ Session.login = function(session, username, password) {
             // verification, it is still an valid session unless `sessionid` missing
             return session.getAccountId()
                 .then(function () {
-                    // We got sessionId and accountId, we are good to go 
-                    return session; 
+                    // We got sessionId and accountId, we are good to go
+                    return session;
                 })
                 .catch(Exceptions.CookieNotValidError, function (e) {
                     throw error;
                 })
         })
-        
+
 }
 
-Session.create = function(device, storage, username, password, proxy) {
+Session.create = function(device, storage, username, password, proxy, loginParams = {}) {
     var that = this;
     var session = new Session(device, storage);
     if(_.isString(proxy) && !_.isEmpty(proxy))
@@ -198,6 +198,6 @@ Session.create = function(device, storage, username, password, proxy) {
         })
         .catch(Exceptions.CookieNotValidError, function() {
             // We either not have valid cookes or authentication is not fain!
-            return Session.login(session, username, password)
+            return Session.login(session, username, password, loginParams)
         })
 }
