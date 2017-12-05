@@ -7,6 +7,7 @@ const ROUTES = {
     expose: 'qe/expose/',
     login: 'accounts/login/',
     logout: 'accounts/logout/',
+    twoFactor: 'accounts/two_factor_login/',
     setAccountPrivate: 'accounts/set_private/',
     setAccountPublic: 'accounts/set_public/',
     editAccount: 'accounts/edit_profile/',
