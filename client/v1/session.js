@@ -133,7 +133,7 @@ Session.login = function(session, username, password, extra) {
             username: username,
             password: password,
             login_attempt_count: 0
-        }, extra)
+        }, extra))
         .signPayload()
         .send()
         .catch(function (error) {
