@@ -62,10 +62,11 @@ Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipReset
             return error.response;
         })
         .then(function(response){
-            try{
+            try {
                 var json = JSON.parse(response.body);
                 console.log('next step json', json);
-            }catch(e){
+            } catch (e) {
+                console.log('ugh', e);
                 if(response.body.indexOf('url=instagram://checkpoint/dismiss')!=-1) throw new Exceptions.NoChallengeRequired;
                 throw new TypeError('Invalid response. JSON expected');
             }
