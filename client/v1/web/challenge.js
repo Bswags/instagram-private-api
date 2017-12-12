@@ -40,6 +40,8 @@ var Challenge = function(session, type, error, json) {
 Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipResetStep = true) {
     var that = this;
     checkpointError = checkpointError instanceof Exceptions.CheckpointError ? checkpointError : checkpointError.json;
+    console.log('err is', checkpointError);
+    console.log('is the err?', checkpointError instanceof Exceptions.CheckpointError);
     if (!this.apiUrl) this.apiUrl = checkpointError.challenge.api_path;
     if (['email', 'phone'].indexOf(defaultMethod) === -1) throw new Error('Invalid default method');
     var session = checkpointError.session;
