@@ -40,7 +40,7 @@ var Challenge = function(session, type, error, json) {
 Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipResetStep = true) {
     var that = this;
     checkpointError = checkpointError instanceof Exceptions.CheckpointError ? checkpointError : checkpointError.json;
-    if (!this.apiUrl) this.apiUrl = checkpointError.json.challenge.url;
+    if (!this.apiUrl) this.apiUrl = `https://i.instagram.com/api/v1${checkpointError.json.challenge.api_path}`;
     if (['email', 'phone'].indexOf(defaultMethod) === -1) throw new Error('Invalid default method');
     var session = checkpointError.session;
 
@@ -50,7 +50,7 @@ Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipReset
     })
     .then(function() {
         console.log('made it here');
-        return new Request(session)
+        return new WebRequest(session)
             .setMethod('GET')
             .setUrl(that.apiUrl)
             .setHeaders({
