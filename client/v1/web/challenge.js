@@ -50,7 +50,7 @@ Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipReset
     })
     .then(function() {
         console.log('made it here');
-        return new WebRequest(session)
+        return new Request(session)
             .setMethod('GET')
             .setUrl(that.apiUrl)
             .setHeaders({
