@@ -37,13 +37,11 @@ var Challenge = function(session, type, error, json) {
 //Selecting method and sending code is diffenent, depending on native or html style.
 //As soon as we got the code we can confirm it using Native version.
 //Oh, and code confirm is same now for email and phone checkpoints
-Challenge.resolve = function(checkpointError,defaultMethod,skipResetStep){
+Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipResetStep = true) {
     var that = this;
     checkpointError = checkpointError instanceof Exceptions.CheckpointError ? checkpointError : checkpointError.json;
-    if(!this.apiUrl) this.apiUrl = 'https://i.instagram.com/api/v1'+checkpointError.json.challenge.api_path;
-    if(typeof defaultMethod==='undefined') defaultMethod = 'email';
-    if(!(checkpointError instanceof Exceptions.CheckpointError)) throw new Error("`Challenge.resolve` method must get exception (type of `CheckpointError`) as a first argument");
-    if(['email','phone'].indexOf(defaultMethod)==-1) throw new Error('Invalid default method');
+    if (!this.apiUrl) this.apiUrl = checkpointError.challenge.api_path;
+    if (['email', 'phone'].indexOf(defaultMethod) === -1) throw new Error('Invalid default method');
     var session = checkpointError.session;
 
     return new Promise(function(res,rej){
@@ -65,6 +63,7 @@ Challenge.resolve = function(checkpointError,defaultMethod,skipResetStep){
         .then(function(response){
             try{
                 var json = JSON.parse(response.body);
+                console.log('next step json', json);
             }catch(e){
                 if(response.body.indexOf('url=instagram://checkpoint/dismiss')!=-1) throw new Exceptions.NoChallengeRequired;
                 throw new TypeError('Invalid response. JSON expected');
