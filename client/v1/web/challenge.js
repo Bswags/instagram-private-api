@@ -44,11 +44,12 @@ Challenge.resolve = function(checkpointError, defaultMethod = 'phone', skipReset
     if (['email', 'phone'].indexOf(defaultMethod) === -1) throw new Error('Invalid default method');
     var session = checkpointError.session;
 
-    return new Promise(function(res,rej){
-        if(skipResetStep) return res();
+    return new Promise(function(res, rej) {
+        if (skipResetStep) return res();
         return res(that.reset(checkpointError))
     })
     .then(function() {
+        console.log('made it here');
         return new WebRequest(session)
             .setMethod('GET')
             .setUrl(that.apiUrl)
