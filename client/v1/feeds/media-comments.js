@@ -27,7 +27,8 @@ MediaCommentsFeed.prototype.get = function () {
         .then(function(data) {
             that.moreAvailable = data.has_more_comments && !!data.next_max_id;
             if (that.moreAvailable) {
-                that.setCursor(data.next_max_id);
+                const cursorData = JSON.parse(data.next_max_id);
+                that.setCursor(cursorData.server_cursor);
             }
             return _.map(data.comments, function (comment) {
                 comment.pk = comment.pk.c.join("");
